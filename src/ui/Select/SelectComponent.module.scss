@@ -1,0 +1,15 @@
+.select {
+    display: flex;
+    max-width: 250px;
+    align-items: center;
+
+    &_title {
+        color: var(--color-white);
+        font-size: 16px;
+        letter-spacing: 1px;
+        margin: 0 10px 0 0;
+    }
+    &_item{
+        width: 150px;
+    }
+}

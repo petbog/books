@@ -1,12 +1,11 @@
 import React from 'react';
-import Greeter from '../Pages/Greeter/Greeter.tsx';
-
+import HomePage from '../Pages/HomePage/HomePage.tsx';
 
 
 function App() {
   return (
     <div className="App">
-      <Greeter/>
+      <HomePage/>
     </div>
   );
 }
