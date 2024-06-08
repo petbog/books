@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FC } from 'react';
 import s from './HomePage.module.scss'
 import { Input } from '../../ui/Input/Input.tsx';
@@ -6,8 +6,18 @@ import SelectComponent from '../../ui/Select/SelectComponent.tsx';
 
 
 const HomePage: FC = () => {
+
+    const [scrollImg, setScrollImg] = useState<boolean>(false)
+console.log(scrollImg)
+
+    const handlImg = () => {
+        setScrollImg(!scrollImg)
+    }
+
+
     return (
-        <div className={s.home} >
+        <div className={!scrollImg ? `${s.home}  ${s.imgMax}` : `${s.home} ${s.imgMin}`} >
+            <button onClick={handlImg}>button</button>
             <div className="">
                 <h1 className={s.home_title}>searching for books</h1>
             </div>
