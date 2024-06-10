@@ -1,36 +1,56 @@
-import React, { FC, useState } from "react"
+import { FC, useState } from "react"
 import s from './SelectComponent.module.scss'
-import Select from 'react-select'
 
-const options = [
-    { value: 'классика', label: "klassik" },
-    { value: 'роман', label: "roman" },
-]
-
-type SelectComponentType = {
-    title: string
+type optionsType = {
+    activ?: string,
+    label: string;
 }
 
+type SelectComponentType = {
+    title: string,
+    options: optionsType[]
+}
 
-const SelectComponent: FC<SelectComponentType> = ({ title }) => {
+const SelectComponent: FC<SelectComponentType> = ({ title, options }) => {
+    const [open, setOpen] = useState<boolean>(false);
+    const [selectedCategory, setSelectedCategory] = useState<string>(options[0]?.label || "");
 
-    const [optionSelect, setOptionSelect] = useState<{ label: string, value: string } | null>(null)
+    const handkeOpen = () => {
+        setOpen(prev => !prev);
+    }
 
-    const handleChenge = (selectedOption: { label: string, value: string } | null) => {
-        setOptionSelect(selectedOption);
+    const handleSelectCategory = (category: string) => {
+        setSelectedCategory(category);
+        setOpen(false);
     }
 
     return (
         <div className={s.select}>
             <h6 className={s.select_title}>{title}</h6>
-            <Select
-                className={s.select_item}
-                options={options}
-                value={optionSelect}
-                onChange={handleChenge}
-            />
+            <div className={s.dropWown}>
+                <div onClick={handkeOpen} className={s.dropWown_button}>
+                    {selectedCategory}
+                    {
+                    !open ? <span className={s.rows}>▲</span>
+                    : <span className={s.rows}>▼</span>
+                    }
+                </div>
+                {
+                    open && (
+                        <div className={s.dropWown_list}>
+                            {
+                                options.map((item: optionsType, i) => (
+                                    <div key={i} className={s.list} onClick={() => handleSelectCategory(item.label)}>
+                                        <h3 className={s.list_item}>{item.label}</h3>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    )
+                }
+            </div>
         </div>
     )
 }
 
-export default SelectComponent
+export default SelectComponent;

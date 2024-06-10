@@ -9,7 +9,69 @@
         letter-spacing: 1px;
         margin: 0 10px 0 0;
     }
-    &_item{
-        width: 150px;
+}
+
+.dropWown {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 160px;
+    cursor: pointer;
+
+    &_button {
+        border-radius: 10px;
+        background-color: var(--color-white);
+        padding: 20px;
+        width: 100%;
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: 1px;
+        border: 1px solid transparent;
+
+        &:active {
+            transition: border-color 0.3s, color 0.3s;
+            border-color: var(--color-white);
+        }
+
+        &:active {
+            border-color:var(--color-white);
+            color: var(--color-white);
+            transition-duration: 0.3s;
+        }
+    }
+
+    &_list {
+        background-color:var(--color-white);
+        position: absolute;
+        border-radius: 10px;
+        width: 100%;
+        background-color: var(--color-white);
+        top: 59px;
+    }
+}
+
+.rows {
+    position: absolute;
+    right: 7px;
+
+}
+
+.list {
+    width: 100%;
+    &_item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 15px;
+        padding: 10px;
+        border: 1px solid transparent;
+        letter-spacing: 1px;
+        &:hover{
+            background-color: #6f6e6e;
+            color: var(--color-white);
+            transition-duration: 0.3s;
+        }
     }
 }

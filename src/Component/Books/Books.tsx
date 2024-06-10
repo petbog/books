@@ -1,15 +1,28 @@
-import s from './Books.module.scss';
-import React, { FC } from 'react';
+import { useSelector } from 'react-redux'
+import s from './Books.module.scss'
+import { RootState } from '../../Redux'
+import Book from '../Book/Book'
+import { Status } from '../../Redux/Slices/BooksSliceType'
 
 
-type BooksType={}
 
-const Books: FC = ({}) => {
+const Books = () => {
+
+    const { items } = useSelector((state: RootState) => state.books.item)
+console.log(items)
+
     return (
-        <div className={s.Books}>
-            {/* Your code here */}
+        <div className="container">
+            <div className={s.Books}>
+                {
+                    Status.SUCCESS && items.map((item, id) => (
+                        <Book key={id} {...item} />
+                    ))
+                    || 'loading'
+                }
+            </div>
         </div>
-    );
-};
+    )
+}
 
-export default Books;
+export default Books
