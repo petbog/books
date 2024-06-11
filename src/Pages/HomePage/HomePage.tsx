@@ -5,7 +5,7 @@ import { Input } from '../../ui/Input/Input';
 import SelectComponent from '../../ui/Select/SelectComponent';
 import { RootState, useAppDispatch } from '../../Redux';
 import Books from '../../Component/Books/Books';
-import {  featchBooks } from '../../Redux/Slices/BooksSlice';
+import {  featchBooks, loadMoreBooks } from '../../Redux/Slices/BooksSlice';
 import { useSelector } from 'react-redux';
 import { Button } from '../../ui/Button/Button';
 
@@ -24,7 +24,7 @@ const HomePage: FC = () => {
     const handlImg = () => {
         setScrollImg(!scrollImg)
     }
-    useEffect(() => {
+
         if (clickValue) {
             dispatch(featchBooks({
                 value,
@@ -33,9 +33,17 @@ const HomePage: FC = () => {
             }));
             setClickValue(false);
         }
-    }, [dispatch, value, categories, sort, clickValue]);
 
 
+        if(clickButton){
+            dispatch(loadMoreBooks({
+                value,
+                categories,
+                sort,
+              }));
+              setClickButton(false)
+         }
+                
 
 
     const serchSelectorCategories = [

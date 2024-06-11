@@ -9,19 +9,19 @@ export type searchBooksParams = {
     value: string;
     sort: string,
     categories?: string,
-    page?:number
+    page?: number
 }
 
 export const featchBooks = createAsyncThunk(
     'books/featchBooks',
     async function (params: searchBooksParams) {
-        const { value, sort, categories,page } = params
-        let url = `https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=${value}&maxResults=${page}&orderBy=${sort}`
+        const { value, sort, categories, page } = params
+        let url = `https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=${value}&maxResults=30&orderBy=${sort}`
         if (categories === CategoriesEnum.ALL) {
-            url = ` https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=subject:art%20biography%20computers%20history%20medical%20poetry&maxResults=${page}&orderBy=${sort} `
+            url = ` https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=subject:art%20biography%20computers%20history%20medical%20poetry&maxResults=30&orderBy=${sort} `
         }
         else if (categories) {
-            url = `https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=subject:${categories}&maxResults=${page}&orderBy=${sort}`
+            url = `https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=subject:${categories}&maxResults=30&orderBy=${sort}`
         } else {
         }
         try {
@@ -33,6 +33,19 @@ export const featchBooks = createAsyncThunk(
     }
 )
 
+
+export const loadMoreBooks = createAsyncThunk(
+    'books/loadMoreBooks',
+    async function (params: searchBooksParams) {
+        const { value, sort, categories, page } = params
+        try {
+            const { data } = await axios.get<BooksItemType>(`https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=subject:${categories}&maxResults=30&orderBy=${sort}`)
+            return data as BooksItemType
+        } catch (error) {
+            console.warn(error)
+        }
+    }
+);
 export enum CategoriesEnum {
     ALL = 'all',
     ART = 'art',
@@ -93,9 +106,15 @@ const BooksSlice = createSlice({
         builder.addCase(featchBooks.rejected, (state, action) => {
             state.status = Status.ERROR
         })
+         builder.addCase(loadMoreBooks.fulfilled, (state, action: PayloadAction<BooksItemType | undefined>) => {
+            state.status = Status.SUCCESS;
+            if (action.payload) {
+                state.item.items = [...state.item.items, ...action.payload.items];
+            }
+        });
     }
 })
 
 
-export const { setParams,addMoreBooks } = BooksSlice.actions
+export const { setParams, addMoreBooks } = BooksSlice.actions
 export default BooksSlice.reducer
