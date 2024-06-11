@@ -1,11 +1,20 @@
-.Books{
+.Books {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    &_button{
+
+    &_button {
         display: flex;
         justify-content: center;
         align-items: center;
         margin: 50px 0 50px 0;
     }
+}
+
+@media(max-width:630px) {
+    .Books {
+        justify-content: center;
+
+    }
+
 }

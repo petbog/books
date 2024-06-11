@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { FC } from 'react';
 import s from './HomePage.module.scss'
 import { Input } from '../../ui/Input/Input';
 import SelectComponent from '../../ui/Select/SelectComponent';
 import { RootState, useAppDispatch } from '../../Redux';
 import Books from '../../Component/Books/Books';
-import {  featchBooks, loadMoreBooks } from '../../Redux/Slices/BooksSlice';
+import { featchBooks, loadMoreBooks } from '../../Redux/Slices/BooksSlice';
 import { useSelector } from 'react-redux';
 import { Button } from '../../ui/Button/Button';
 
@@ -13,7 +13,6 @@ import { Button } from '../../ui/Button/Button';
 
 const HomePage: FC = () => {
     const dispatch = useAppDispatch()
-    const [scrollImg, setScrollImg] = useState<boolean>(false)
     const [value, setValue] = useState<string>('')
     const [clickValue, setClickValue] = useState<boolean>(false)
     const { categories, sort, item } = useSelector((state: RootState) => state.books)
@@ -21,29 +20,25 @@ const HomePage: FC = () => {
     const [clickButton, setClickButton] = useState<boolean>(false)
 
 
-    const handlImg = () => {
-        setScrollImg(!scrollImg)
+    if (clickValue) {
+        dispatch(featchBooks({
+            value,
+            categories,
+            sort,
+        }));
+        setClickValue(false);
     }
 
-        if (clickValue) {
-            dispatch(featchBooks({
-                value,
-                categories,
-                sort,
-            }));
-            setClickValue(false);
-        }
 
+    if (clickButton) {
+        dispatch(loadMoreBooks({
+            value,
+            categories,
+            sort,
+        }));
+        setClickButton(false)
+    }
 
-        if(clickButton){
-            dispatch(loadMoreBooks({
-                value,
-                categories,
-                sort,
-              }));
-              setClickButton(false)
-         }
-                
 
 
     const serchSelectorCategories = [
@@ -63,7 +58,6 @@ const HomePage: FC = () => {
     return (
         <div className="">
             <div className={items.length ? `${s.home}  ${s.imgMin}` : `${s.home} `} >
-                <button onClick={handlImg}>button</button>
                 <div className="">
                     <h1 className={s.home_title}>searching for books</h1>
                 </div>

@@ -1,6 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BooksItemType, Status } from "./BooksSliceType";
+import { RootState } from "..";
 
 // const api_key = `AIzaSyA2dq09iFT8XpPnisbhnRnz-YpS8yz_3UQ`
 const api_key = `AIzaSyDU2Ho6TuQls3_FCcHNjQJXmjmLApuUjRU`
@@ -9,21 +10,21 @@ export type searchBooksParams = {
     value: string;
     sort: string,
     categories?: string,
-    page?: number
 }
 
 export const featchBooks = createAsyncThunk(
     'books/featchBooks',
     async function (params: searchBooksParams) {
-        const { value, sort, categories, page } = params
-        let url = `https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=${value}&maxResults=30&orderBy=${sort}`
-        if (categories === CategoriesEnum.ALL) {
-            url = ` https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=subject:art%20biography%20computers%20history%20medical%20poetry&maxResults=30&orderBy=${sort} `
-        }
-        else if (categories) {
+        const { value, sort, categories } = params
+        let url = `https://www.googleapis.com/books/v1/volumes?key=${api_key}&maxResults=30&orderBy=${sort}`
+        if (value) {
+            url = `https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=${value}&maxResults=30&orderBy=${sort}`
+        } else if (categories === CategoriesEnum.ALL) {
+            url = `https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=subject:art%20biography%20computers%20history%20medical%20poetry&maxResults=30&orderBy=${sort}`
+        } else if (categories) {
             url = `https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=subject:${categories}&maxResults=30&orderBy=${sort}`
-        } else {
         }
+
         try {
             const { data } = await axios.get<BooksItemType>(url)
             return data as BooksItemType
@@ -36,10 +37,19 @@ export const featchBooks = createAsyncThunk(
 
 export const loadMoreBooks = createAsyncThunk(
     'books/loadMoreBooks',
-    async function (params: searchBooksParams) {
-        const { value, sort, categories, page } = params
+    async function (params: searchBooksParams, { getState }) {
+        const { value, sort, categories } = params
+        const currentPage = (getState() as RootState).books.currentPage;
+        let url = `https://www.googleapis.com/books/v1/volumes?key=${api_key}&maxResults=30&orderBy=${sort}&startIndex=${(currentPage + 1) * 30}`
+        if (value) {
+            url = `https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=${value}&maxResults=30&orderBy=${sort}&startIndex=${(currentPage + 1) * 30}`
+        } else if (categories === CategoriesEnum.ALL) {
+            url = `https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=subject:art%20biography%20computers%20history%20medical%20poetry&maxResults=30&orderBy=${sort}&startIndex=${(currentPage + 1) * 30}`
+        } else if (categories) {
+            url = `https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=subject:${categories}&maxResults=30&orderBy=${sort}&startIndex=${(currentPage + 1) * 30}`
+        }
         try {
-            const { data } = await axios.get<BooksItemType>(`https://www.googleapis.com/books/v1/volumes?key=${api_key}&q=subject:${categories}&maxResults=30&orderBy=${sort}`)
+            const { data } = await axios.get<BooksItemType>(url)
             return data as BooksItemType
         } catch (error) {
             console.warn(error)
@@ -64,7 +74,8 @@ export interface BooksState {
     item: BooksItemType;
     status: Status;
     categories: CategoriesEnum,
-    sort: SortEnum
+    sort: SortEnum,
+    currentPage: number
 }
 
 const initialState: BooksState = {
@@ -75,7 +86,8 @@ const initialState: BooksState = {
     } as BooksItemType,
     status: Status.LOADING,
     categories: CategoriesEnum.ALL,
-    sort: SortEnum.NEWEST
+    sort: SortEnum.NEWEST,
+    currentPage: 0
 }
 
 const BooksSlice = createSlice({
@@ -91,6 +103,7 @@ const BooksSlice = createSlice({
         },
         addMoreBooks(state, action: PayloadAction<BooksItemType>) {
             state.item.items = [...state.item.items, ...action.payload.items];
+
         }
     },
     extraReducers: (builder) => {
@@ -106,10 +119,11 @@ const BooksSlice = createSlice({
         builder.addCase(featchBooks.rejected, (state, action) => {
             state.status = Status.ERROR
         })
-         builder.addCase(loadMoreBooks.fulfilled, (state, action: PayloadAction<BooksItemType | undefined>) => {
+        builder.addCase(loadMoreBooks.fulfilled, (state, action: PayloadAction<BooksItemType | undefined>) => {
             state.status = Status.SUCCESS;
             if (action.payload) {
                 state.item.items = [...state.item.items, ...action.payload.items];
+                state.currentPage++
             }
         });
     }

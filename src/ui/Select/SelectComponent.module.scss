@@ -75,3 +75,24 @@
         }
     }
 }
+@media(max-width:587px){
+    .select{
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        margin:  0 10px 0 0 ;
+        &_title{
+            margin: 0 0 10px 0;
+        }
+    }
+    .dropWown {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 123px;
+        cursor: pointer;
+    
+    }
+    
+}
