@@ -19,7 +19,12 @@ const Book: FC<BookProps> = (props) => {
     const { authors, categories, title, imageLinks } = props.volumeInfo;
     const thumbnail = imageLinks ? imageLinks.thumbnail : '';
 
-    const sliceAuthors = authors.slice(0, 1)
+
+    if (authors) {
+        authors.slice(0, 1)
+    }
+
+
 
     return (
         <div className={s.Book}>
@@ -30,7 +35,7 @@ const Book: FC<BookProps> = (props) => {
             </div>
             <p className={s.Book_categories}>{categories}</p>
             <p className={s.Book_title}>{title}</p>
-            <p className={s.Book_aftor}>{sliceAuthors}</p>
+            <p className={s.Book_aftor}>{authors}</p>
         </div>
     );
 };

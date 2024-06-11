@@ -9,7 +9,8 @@ import { Status } from '../../Redux/Slices/BooksSliceType'
 const Books = () => {
 
     const { items } = useSelector((state: RootState) => state.books.item)
-console.log(items)
+
+
 
     return (
         <div className="container">
@@ -20,6 +21,7 @@ console.log(items)
                     ))
                     || 'loading'
                 }
+
             </div>
         </div>
     )

@@ -1,29 +1,28 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import React from 'react'
 import s from './Input.module.scss'
-import { useAppDispatch } from '../../Redux'
-import { featchBooks } from '../../Redux/Slices/BooksSlice'
-
 
 type inputType = {
-    placeholder: string
+    placeholder: string,
+    value:string;
+    setValue: (value: string) => void;
+    clickValue:boolean
+    setClickValue: (value: boolean) => void;
 }
 
-export const Input: FC<inputType> = ({ placeholder }) => {
+export const Input: FC<inputType> = ({ placeholder,value,setValue,setClickValue,clickValue }) => {
 
-    const [value, setValue] = useState<string>('')
-    const dispatch = useAppDispatch()
 
     const handlValue = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value)
     }
 
     const serchValue = () => {
-        dispatch(featchBooks({ value: value }))
+        setClickValue(!clickValue)
     }
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            serchValue()
+            setClickValue(!clickValue)
         }
     }
 
@@ -38,8 +37,7 @@ export const Input: FC<inputType> = ({ placeholder }) => {
                     type="text"
                     onKeyDown={handleKeyDown}
                 />
-                {
-                    value.length > 3 &&
+                
                     <svg onClick={serchValue} className={s.input_serch} xmlns="http://www.w3.org/2000/svg" viewBox="0,0,256,256">
                         <g fillRule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" fontFamily="none" fontWeight="none" fontSize="none" textAnchor="none" style={{ mixBlendMode: 'normal' }}>
                             <g transform="scale(5.12,5.12)">
@@ -48,7 +46,7 @@ export const Input: FC<inputType> = ({ placeholder }) => {
                             </g>
                         </g>
                     </svg>
-                }
+
             </div>
         </div>
     )

@@ -1,5 +1,8 @@
-import { FC, useState } from "react"
+import { FC, useEffect, useState } from "react"
 import s from './SelectComponent.module.scss'
+import { useAppDispatch } from "../../Redux";
+import { CategoriesEnum, SortEnum } from "../../Redux/Slices/BooksSlice";
+import { setParams } from "../../Redux/Slices/BooksSlice";
 
 type optionsType = {
     activ?: string,
@@ -9,11 +12,13 @@ type optionsType = {
 type SelectComponentType = {
     title: string,
     options: optionsType[]
+
 }
 
 const SelectComponent: FC<SelectComponentType> = ({ title, options }) => {
     const [open, setOpen] = useState<boolean>(false);
     const [selectedCategory, setSelectedCategory] = useState<string>(options[0]?.label || "");
+    const dispatch = useAppDispatch()
 
     const handkeOpen = () => {
         setOpen(prev => !prev);
@@ -23,6 +28,9 @@ const SelectComponent: FC<SelectComponentType> = ({ title, options }) => {
         setSelectedCategory(category);
         setOpen(false);
     }
+    useEffect(() => {
+        dispatch(setParams(selectedCategory as CategoriesEnum | SortEnum))
+    }, [dispatch, selectedCategory])
 
     return (
         <div className={s.select}>
@@ -31,8 +39,8 @@ const SelectComponent: FC<SelectComponentType> = ({ title, options }) => {
                 <div onClick={handkeOpen} className={s.dropWown_button}>
                     {selectedCategory}
                     {
-                    !open ? <span className={s.rows}>▲</span>
-                    : <span className={s.rows}>▼</span>
+                        !open ? <span className={s.rows}>▲</span>
+                            : <span className={s.rows}>▼</span>
                     }
                 </div>
                 {
