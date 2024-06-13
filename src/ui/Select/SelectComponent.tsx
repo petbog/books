@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from "react"
 import s from './SelectComponent.module.scss'
 import { useAppDispatch } from "../../Redux";
-import { CategoriesEnum, SortEnum } from "../../Redux/Slices/BooksSlice";
-import { setParams } from "../../Redux/Slices/BooksSlice";
+import { setParams , } from "../../Redux/Slices/BooksSlice";
+import { CategoriesEnum, SortEnum } from "../../Redux/Slices/BooksSliceType";
 
 type optionsType = {
     activ?: string,

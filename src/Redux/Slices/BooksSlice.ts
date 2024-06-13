@@ -1,8 +1,9 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { BooksItemType, Status } from "./BooksSliceType";
+import { BooksItemType,  CategoriesEnum,  Status,SortEnum } from "./BooksSliceType";
 import { RootState } from "..";
 
+//не стал помещать в .env т.к не знаю как загрузить на vercel
 // const api_key = `AIzaSyA2dq09iFT8XpPnisbhnRnz-YpS8yz_3UQ`
 const api_key = `AIzaSyDU2Ho6TuQls3_FCcHNjQJXmjmLApuUjRU`
 
@@ -12,6 +13,8 @@ export type searchBooksParams = {
     categories?: string,
 }
 
+
+//получение данных
 export const featchBooks = createAsyncThunk(
     'books/featchBooks',
     async function (params: searchBooksParams) {
@@ -34,7 +37,7 @@ export const featchBooks = createAsyncThunk(
     }
 )
 
-
+//пагинация
 export const loadMoreBooks = createAsyncThunk(
     'books/loadMoreBooks',
     async function (params: searchBooksParams, { getState }) {
@@ -56,20 +59,7 @@ export const loadMoreBooks = createAsyncThunk(
         }
     }
 );
-export enum CategoriesEnum {
-    ALL = 'all',
-    ART = 'art',
-    bIOGRAPHY = 'biography',
-    COMPUTERS = 'computers',
-    HISTORY = 'history',
-    MEDICAL = 'medical',
-    POETRY = 'poetry',
-}
-export enum SortEnum {
-    RELEVANCE = 'relevance',
-    NEWEST = 'newest',
 
-}
 export interface BooksState {
     item: BooksItemType;
     status: Status;

@@ -19,7 +19,7 @@ const HomePage: FC = () => {
     const { items } = useSelector((state: RootState) => state.books.item)
     const [clickButton, setClickButton] = useState<boolean>(false)
 
-
+//загрузка основного контента
     if (clickValue) {
         dispatch(featchBooks({
             value,
@@ -29,7 +29,7 @@ const HomePage: FC = () => {
         setClickValue(false);
     }
 
-
+//паггинация контента
     if (clickButton) {
         dispatch(loadMoreBooks({
             value,
@@ -40,7 +40,7 @@ const HomePage: FC = () => {
     }
 
 
-
+//категории  для selector
     const serchSelectorCategories = [
         { activ: "all", label: "all" },
         { label: "art" },

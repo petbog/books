@@ -56,3 +56,17 @@ export enum Status {
     SUCCESS = 'succes',
     ERROR = 'error'
 }
+export enum SortEnum {
+    RELEVANCE = 'relevance',
+    NEWEST = 'newest',
+
+}
+export enum CategoriesEnum {
+    ALL = 'all',
+    ART = 'art',
+    bIOGRAPHY = 'biography',
+    COMPUTERS = 'computers',
+    HISTORY = 'history',
+    MEDICAL = 'medical',
+    POETRY = 'poetry',
+}
